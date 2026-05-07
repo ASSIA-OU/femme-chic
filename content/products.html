@@ -1,0 +1,197 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Boutique FemmeChic — Robes, hauts, pantalons, vestes et accessoires pour femmes.">
+  <title>Boutique – FemmeChic</title>
+  <link rel="stylesheet" href="../style/main.css">
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <main>
+    <!-- Page Hero -->
+    <section class="products-page-hero" aria-label="En-tête boutique">
+      <div class="container">
+        <h1 class="section-title" style="margin-bottom:.4rem">Notre Boutique</h1>
+        <p class="section-sub" style="margin-bottom:0">Découvrez toutes nos pièces tendance</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <!-- Filter Bar -->
+      <div class="filter-bar" role="toolbar" aria-label="Filtres et tri">
+        <div style="display:flex;flex-direction:column;gap:.8rem;flex:1">
+          <!-- Categories -->
+          <div class="filter-group" id="cat-filters" role="group" aria-label="Filtrer par catégorie">
+            <button class="filter-btn active" data-cat="all">Tout</button>
+            <button class="filter-btn" data-cat="robes">Robes</button>
+            <button class="filter-btn" data-cat="hauts">Hauts</button>
+            <button class="filter-btn" data-cat="pantalons">Pantalons</button>
+            <button class="filter-btn" data-cat="vestes">Vestes</button>
+            <button class="filter-btn" data-cat="accessoires">Accessoires</button>
+          </div>
+          <!-- Sub-filters -->
+          <div class="filter-group" id="badge-filters" role="group" aria-label="Filtrer par badge">
+            <button class="filter-btn" data-badge="all">Tous les styles</button>
+            <button class="filter-btn" data-badge="Nouveau">Nouveautés</button>
+            <button class="filter-btn" data-badge="Bestseller">Bestsellers</button>
+            <button class="filter-btn" data-badge="Solde">Soldes</button>
+            <button class="filter-btn" data-badge="Tendance">Tendance</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+          <span class="products-count" id="products-count"></span>
+          <select class="sort-select" id="sort-select" aria-label="Trier par">
+            <option value="default">Tri par défaut</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+            <option value="rating">Mieux notés</option>
+            <option value="reviews">Plus commentés</option>
+          </select>
+          <div style="position:relative">
+            <input type="text" id="search-input" placeholder="🔍 Rechercher..." class="form-control" style="width:200px;padding:.45rem 1rem;border-radius:20px" aria-label="Rechercher un produit">
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="products-grid" id="products-grid" style="margin-top:2rem" role="list" aria-label="Liste des produits"></div>
+      <div id="no-results" role="status">
+        <div style="font-size:3rem;margin-bottom:1rem">😔</div>
+        <p>Aucun produit trouvé.</p>
+        <button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="resetFilters()">Réinitialiser les filtres</button>
+      </div>
+
+      <!-- Pagination indicator -->
+      <div style="text-align:center;padding:2rem 0;color:var(--soft);font-size:.88rem" id="results-info"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none">
+        <p>© 2025 FemmeChic — Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../javascript/products.js"></script>
+  <script src="../javascript/auth.js"></script>
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/nav.js"></script>
+  <script>
+    // ========================
+    // PRODUCTS.JS inline
+    // ========================
+    let currentCat = 'all';
+    let currentBadge = 'all';
+    let currentSort = 'default';
+    let currentSearch = '';
+
+    function getFilteredProducts() {
+      let list = [...products];
+      if (currentCat !== 'all') list = list.filter(p => p.category === currentCat);
+      if (currentBadge !== 'all') list = list.filter(p => p.badge === currentBadge);
+      if (currentSearch.trim()) {
+        const q = currentSearch.toLowerCase().trim();
+        list = list.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+      }
+      switch (currentSort) {
+        case 'price-asc':  list.sort((a,b) => a.price - b.price); break;
+        case 'price-desc': list.sort((a,b) => b.price - a.price); break;
+        case 'rating':     list.sort((a,b) => b.rating - a.rating); break;
+        case 'reviews':    list.sort((a,b) => b.reviews - a.reviews); break;
+      }
+      return list;
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('products-grid');
+      const noRes = document.getElementById('no-results');
+      const count = document.getElementById('products-count');
+      const info = document.getElementById('results-info');
+      const list = getFilteredProducts();
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        noRes.style.display = 'block';
+        count.textContent = '0 produit';
+        info.textContent = '';
+        return;
+      }
+      noRes.style.display = 'none';
+      grid.innerHTML = list.map(p => `<div role="listitem">${renderProductCard(p)}</div>`).join('');
+      count.textContent = `${list.length} produit${list.length > 1 ? 's' : ''}`;
+      info.textContent = `${list.length} résultat${list.length > 1 ? 's' : ''} affiché${list.length > 1 ? 's' : ''}`;
+      grid.querySelectorAll('.product-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', e => {
+          if (!e.target.closest('button')) openProductModal(+card.dataset.id);
+        });
+      });
+    }
+
+    function resetFilters() {
+      currentCat = 'all'; currentBadge = 'all'; currentSearch = ''; currentSort = 'default';
+      document.querySelectorAll('#cat-filters .filter-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+      document.querySelectorAll('#badge-filters .filter-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+      document.getElementById('sort-select').value = 'default';
+      document.getElementById('search-input').value = '';
+      renderProducts();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // URL params
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat');
+      const badge = params.get('filter');
+      if (cat) {
+        currentCat = cat;
+        document.querySelectorAll('#cat-filters .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+      }
+      if (badge === 'solde') {
+        currentBadge = 'Solde';
+        document.querySelectorAll('#badge-filters .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.badge === 'Solde'));
+      }
+
+      // Category filters
+      document.querySelectorAll('#cat-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#cat-filters .filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCat = btn.dataset.cat;
+          renderProducts();
+        });
+      });
+
+      // Badge filters
+      document.querySelectorAll('#badge-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#badge-filters .filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentBadge = btn.dataset.badge;
+          renderProducts();
+        });
+      });
+
+      // Sort
+      document.getElementById('sort-select').addEventListener('change', e => {
+        currentSort = e.target.value;
+        renderProducts();
+      });
+
+      // Search
+      let searchTimeout;
+      document.getElementById('search-input').addEventListener('input', e => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => { currentSearch = e.target.value; renderProducts(); }, 300);
+      });
+
+      renderProducts();
+    });
+  </script>
+</body>
+</html>

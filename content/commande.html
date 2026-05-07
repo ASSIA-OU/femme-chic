@@ -1,0 +1,337 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Passer votre commande sur FemmeChic.">
+  <title>Commande – FemmeChic</title>
+  <link rel="stylesheet" href="../style/main.css">
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <main style="padding:3rem 0;min-height:80vh">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav aria-label="Fil d'Ariane" style="margin-bottom:2rem;font-size:.85rem;color:var(--soft)">
+        <a href="../index.html" style="color:var(--rose)">Accueil</a> &rsaquo;
+        <a href="products.html" style="color:var(--rose)">Boutique</a> &rsaquo;
+        <span>Commande</span>
+      </nav>
+
+      <h1 style="font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:2rem">Finaliser ma commande</h1>
+
+      <!-- Empty cart state -->
+      <div id="empty-order" style="text-align:center;padding:4rem;display:none">
+        <div style="font-size:4rem;margin-bottom:1rem">🛍️</div>
+        <h2 style="font-family:'Playfair Display',serif;margin-bottom:.5rem">Votre panier est vide</h2>
+        <p style="color:var(--soft);margin-bottom:1.5rem">Ajoutez des articles avant de passer commande.</p>
+        <a href="products.html" class="btn btn-primary">Découvrir nos produits</a>
+      </div>
+
+      <!-- Order content -->
+      <div class="order-grid" id="order-content">
+        <!-- Left: Form -->
+        <div>
+          <!-- Step indicator -->
+          <div style="display:flex;gap:0;margin-bottom:2rem">
+            <div class="step-item active" id="step1-tab" style="flex:1;text-align:center;padding:.6rem;font-size:.82rem;font-weight:600;background:var(--rose);color:#fff;border-radius:8px 0 0 8px">1. Livraison</div>
+            <div class="step-item" id="step2-tab" style="flex:1;text-align:center;padding:.6rem;font-size:.82rem;font-weight:600;background:var(--border);color:var(--mid);border-radius:0">2. Paiement</div>
+            <div class="step-item" id="step3-tab" style="flex:1;text-align:center;padding:.6rem;font-size:.82rem;font-weight:600;background:var(--border);color:var(--mid);border-radius:0 8px 8px 0">3. Confirmation</div>
+          </div>
+
+          <!-- Step 1: Livraison -->
+          <div id="step1" class="order-form-wrap">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1.5rem">Informations de livraison</h3>
+            <form id="delivery-form" novalidate>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                <div class="form-group">
+                  <label for="d-first">Prénom *</label>
+                  <input type="text" id="d-first" class="form-control" placeholder="Sara" required>
+                  <div class="field-error" id="d-first-error"></div>
+                </div>
+                <div class="form-group">
+                  <label for="d-last">Nom *</label>
+                  <input type="text" id="d-last" class="form-control" placeholder="Benali" required>
+                  <div class="field-error" id="d-last-error"></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="d-phone">Téléphone *</label>
+                <input type="tel" id="d-phone" class="form-control" placeholder="0661234567" required>
+                <div class="field-error" id="d-phone-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="d-email">Email *</label>
+                <input type="email" id="d-email" class="form-control" placeholder="votre@email.com" required>
+                <div class="field-error" id="d-email-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="d-wilaya">Wilaya *</label>
+                <select id="d-wilaya" class="form-control" required>
+                  <option value="">-- Sélectionner une wilaya --</option>
+                  <option>01 - Adrar</option><option>02 - Chlef</option><option>03 - Laghouat</option>
+                  <option>04 - Oum El Bouaghi</option><option>05 - Batna</option><option>06 - Béjaïa</option>
+                  <option>07 - Biskra</option><option>09 - Blida</option><option>15 - Tizi-Ouzou</option>
+                  <option>16 - Alger</option><option>19 - Sétif</option><option>23 - Annaba</option>
+                  <option>25 - Constantine</option><option>31 - Oran</option><option>35 - Boumerdès</option>
+                </select>
+                <div class="field-error" id="d-wilaya-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="d-address">Adresse complète *</label>
+                <textarea id="d-address" class="form-control" rows="3" placeholder="N° rue, quartier, commune..." required style="resize:vertical"></textarea>
+                <div class="field-error" id="d-address-error"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="d-notes">Instructions spéciales (optionnel)</label>
+                <textarea id="d-notes" class="form-control" rows="2" placeholder="Instructions pour la livraison..." style="resize:vertical"></textarea>
+              </div>
+
+              <!-- Livraison options -->
+              <h4 style="font-weight:600;margin-bottom:1rem;color:var(--mid)">Mode de livraison</h4>
+              <div style="display:flex;flex-direction:column;gap:.7rem;margin-bottom:1.5rem">
+                <label style="display:flex;align-items:center;gap:1rem;padding:1rem;border:1.5px solid var(--rose);border-radius:10px;cursor:pointer;background:var(--rose-light)">
+                  <input type="radio" name="delivery" value="standard" checked style="accent-color:var(--rose)">
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:.9rem">Livraison standard</div>
+                    <div style="font-size:.78rem;color:var(--soft)">3-5 jours ouvrés</div>
+                  </div>
+                  <strong style="color:var(--rose-dark)">350 DA</strong>
+                </label>
+                <label style="display:flex;align-items:center;gap:1rem;padding:1rem;border:1.5px solid var(--border);border-radius:10px;cursor:pointer">
+                  <input type="radio" name="delivery" value="express" style="accent-color:var(--rose)">
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:.9rem">Livraison express</div>
+                    <div style="font-size:.78rem;color:var(--soft)">24-48h</div>
+                  </div>
+                  <strong style="color:var(--rose-dark)">650 DA</strong>
+                </label>
+                <label style="display:flex;align-items:center;gap:1rem;padding:1rem;border:1.5px solid var(--border);border-radius:10px;cursor:pointer">
+                  <input type="radio" name="delivery" value="relay" style="accent-color:var(--rose)">
+                  <div style="flex:1">
+                    <div style="font-weight:600;font-size:.9rem">Retrait en point relais</div>
+                    <div style="font-size:.78rem;color:var(--soft)">Disponible sous 48h</div>
+                  </div>
+                  <strong style="color:var(--green)">Gratuit</strong>
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-full">Continuer vers le paiement →</button>
+            </form>
+          </div>
+
+          <!-- Step 2: Paiement -->
+          <div id="step2" class="order-form-wrap" style="display:none">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1.5rem">Mode de paiement</h3>
+            <div style="display:flex;flex-direction:column;gap:.7rem;margin-bottom:2rem">
+              <label style="display:flex;align-items:center;gap:1rem;padding:1rem;border:1.5px solid var(--rose);border-radius:10px;cursor:pointer;background:var(--rose-light)">
+                <input type="radio" name="payment" value="cod" checked style="accent-color:var(--rose)">
+                <span style="font-size:1.3rem">💵</span>
+                <div><div style="font-weight:600;font-size:.9rem">Paiement à la livraison</div><div style="font-size:.78rem;color:var(--soft)">Payez en espèces à la réception</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:1rem;padding:1rem;border:1.5px solid var(--border);border-radius:10px;cursor:pointer">
+                <input type="radio" name="payment" value="ccp" style="accent-color:var(--rose)">
+                <span style="font-size:1.3rem">🏦</span>
+                <div><div style="font-weight:600;font-size:.9rem">Virement CCP / Baridi</div><div style="font-size:.78rem;color:var(--soft)">Versement sur compte postal</div></div>
+              </label>
+              <label style="display:flex;align-items:center;gap:1rem;padding:1rem;border:1.5px solid var(--border);border-radius:10px;cursor:pointer">
+                <input type="radio" name="payment" value="card" style="accent-color:var(--rose)">
+                <span style="font-size:1.3rem">💳</span>
+                <div><div style="font-weight:600;font-size:.9rem">Carte bancaire (EDAHABIA / CIB)</div><div style="font-size:.78rem;color:var(--soft)">Paiement sécurisé en ligne</div></div>
+              </label>
+            </div>
+
+            <!-- Code promo -->
+            <div style="margin-bottom:1.5rem">
+              <label style="font-size:.85rem;font-weight:600;color:var(--mid);display:block;margin-bottom:.5rem">Code promotionnel</label>
+              <div style="display:flex;gap:.6rem">
+                <input type="text" id="promo-code" class="form-control" placeholder="ex: FEMME20" style="border-radius:10px 0 0 10px">
+                <button type="button" class="btn btn-outline btn-sm" onclick="applyPromo()" style="border-radius:0 10px 10px 0;white-space:nowrap">Appliquer</button>
+              </div>
+              <div id="promo-msg" style="font-size:.8rem;margin-top:.4rem"></div>
+              <div class="form-hint">Essayez : FEMME20 (−20%)</div>
+            </div>
+
+            <div style="display:flex;gap:.8rem">
+              <button class="btn btn-outline" onclick="goToStep(1)">← Retour</button>
+              <button class="btn btn-primary" style="flex:1" onclick="placeOrder()">Confirmer la commande</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Confirmation -->
+          <div id="step3" class="order-form-wrap" style="display:none;text-align:center">
+            <div style="font-size:4rem;margin-bottom:1rem">🎉</div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--rose-dark);margin-bottom:.5rem">Commande confirmée !</h3>
+            <p style="color:var(--soft);margin-bottom:.5rem">Merci pour votre commande. Vous recevrez une confirmation par email.</p>
+            <div style="background:var(--rose-light);border-radius:10px;padding:1rem;margin:1.5rem 0;font-size:.9rem">
+              Numéro de commande : <strong id="order-number" style="color:var(--rose-dark)"></strong>
+            </div>
+            <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">
+              <a href="../index.html" class="btn btn-outline">Retour à l'accueil</a>
+              <a href="products.html" class="btn btn-primary">Continuer mes achats</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Summary -->
+        <div>
+          <div class="order-summary" id="order-summary-box" style="position:sticky;top:90px">
+            <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1rem">Récapitulatif</h3>
+            <div id="summary-items"></div>
+            <div style="border-top:1px solid rgba(201,116,143,.3);margin:.8rem 0;padding-top:.8rem">
+              <div class="order-item"><span>Sous-total</span><span id="subtotal-val"></span></div>
+              <div class="order-item"><span>Livraison</span><span id="delivery-val">350 DA</span></div>
+              <div class="order-item" id="promo-row" style="display:none;color:var(--rose-dark)"><span>Réduction</span><span id="promo-val"></span></div>
+            </div>
+            <div class="order-total"><span>Total</span><span id="total-val" style="color:var(--rose-dark);font-family:'Playfair Display',serif"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../javascript/products.js"></script>
+  <script src="../javascript/auth.js"></script>
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/nav.js"></script>
+  <script>
+    let promoApplied = 0;
+    let deliveryCost = 350;
+
+    const promoCodes = { 'FEMME20': 20, 'CHIC10': 10, 'BIENVENUE': 15 };
+
+    function renderSummary() {
+      const cart = getCart();
+      const subtotal = getCartTotal();
+      const total = subtotal + deliveryCost - promoApplied;
+
+      document.getElementById('summary-items').innerHTML = cart.map(item => `
+        <div class="order-item">
+          <span style="flex:1">${item.name} <span style="color:var(--soft);font-size:.78rem">×${item.qty}</span><br><span style="font-size:.75rem;color:var(--soft)">${item.size} · ${item.color}</span></span>
+          <span style="font-weight:600">${(item.price * item.qty).toLocaleString('fr-DZ')} DA</span>
+        </div>
+      `).join('');
+
+      document.getElementById('subtotal-val').textContent = subtotal.toLocaleString('fr-DZ') + ' DA';
+      document.getElementById('delivery-val').textContent = deliveryCost === 0 ? 'Gratuit' : deliveryCost.toLocaleString('fr-DZ') + ' DA';
+      document.getElementById('total-val').textContent = Math.max(0, total).toLocaleString('fr-DZ') + ' DA';
+    }
+
+    function goToStep(n) {
+      [1,2,3].forEach(i => {
+        document.getElementById(`step${i}`).style.display = i === n ? '' : 'none';
+        const tab = document.getElementById(`step${i}-tab`);
+        tab.style.background = i === n ? 'var(--rose)' : (i < n ? 'var(--mid)' : 'var(--border)');
+        tab.style.color = i <= n ? '#fff' : 'var(--mid)';
+      });
+    }
+
+    // Delivery cost change
+    document.addEventListener('change', e => {
+      if (e.target.name === 'delivery') {
+        deliveryCost = e.target.value === 'express' ? 650 : e.target.value === 'relay' ? 0 : 350;
+        renderSummary();
+      }
+    });
+
+    function applyPromo() {
+      const code = document.getElementById('promo-code').value.trim().toUpperCase();
+      const msg = document.getElementById('promo-msg');
+      const subtotal = getCartTotal();
+      if (promoCodes[code]) {
+        promoApplied = Math.round(subtotal * promoCodes[code] / 100);
+        msg.style.color = '#2e7d32';
+        msg.textContent = `✓ Code appliqué ! Réduction de ${promoCodes[code]}% (−${promoApplied.toLocaleString('fr-DZ')} DA)`;
+        document.getElementById('promo-row').style.display = '';
+        document.getElementById('promo-val').textContent = `−${promoApplied.toLocaleString('fr-DZ')} DA`;
+        renderSummary();
+      } else {
+        msg.style.color = '#c62828';
+        msg.textContent = '✕ Code invalide ou expiré.';
+      }
+    }
+
+    function placeOrder() {
+      const orderNum = 'FC-' + Date.now().toString().slice(-8).toUpperCase();
+      document.getElementById('order-number').textContent = orderNum;
+      clearCart();
+      goToStep(3);
+    }
+
+    // Form validation step 1
+    document.getElementById('delivery-form').addEventListener('submit', e => {
+      e.preventDefault();
+      let valid = true;
+
+      const checks = [
+        { id: 'd-first', type: 'name', errId: 'd-first-error' },
+        { id: 'd-last', type: 'name', errId: 'd-last-error' },
+        { id: 'd-email', type: 'email', errId: 'd-email-error' },
+        { id: 'd-phone', type: 'phone', errId: 'd-phone-error' }
+      ];
+
+      checks.forEach(({ id, type, errId }) => {
+        const el = document.getElementById(id);
+        const res = validateField(type, el.value);
+        el.classList.toggle('valid', res.valid);
+        el.classList.toggle('invalid', !res.valid);
+        const err = document.getElementById(errId);
+        err.textContent = res.message || ''; err.classList.toggle('show', !res.valid);
+        if (!res.valid) valid = false;
+      });
+
+      // Wilaya
+      const wilaya = document.getElementById('d-wilaya');
+      if (!wilaya.value) {
+        wilaya.classList.add('invalid');
+        document.getElementById('d-wilaya-error').textContent = 'Veuillez sélectionner une wilaya.';
+        document.getElementById('d-wilaya-error').classList.add('show');
+        valid = false;
+      } else {
+        wilaya.classList.add('valid');
+        document.getElementById('d-wilaya-error').classList.remove('show');
+      }
+
+      // Address
+      const addr = document.getElementById('d-address');
+      if (!addr.value.trim() || addr.value.trim().length < 10) {
+        addr.classList.add('invalid');
+        document.getElementById('d-address-error').textContent = 'Adresse trop courte (min. 10 caractères).';
+        document.getElementById('d-address-error').classList.add('show');
+        valid = false;
+      } else {
+        addr.classList.add('valid');
+        document.getElementById('d-address-error').classList.remove('show');
+      }
+
+      if (valid) goToStep(2);
+    });
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      const cart = getCart();
+      if (cart.length === 0) {
+        document.getElementById('empty-order').style.display = 'block';
+        document.getElementById('order-content').style.display = 'none';
+      } else {
+        renderSummary();
+        // Pre-fill if logged in
+        const session = getSession();
+        if (session) {
+          document.getElementById('d-first').value = session.name.split(' ')[0] || '';
+          document.getElementById('d-last').value = session.name.split(' ').slice(1).join(' ') || '';
+          document.getElementById('d-email').value = session.email || '';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

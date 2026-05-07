@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Connexion à votre compte FemmeChic.">
+  <title>Connexion – FemmeChic</title>
+  <link rel="stylesheet" href="../style/main.css">
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <main class="auth-page">
+    <!-- Visual side -->
+    <div class="auth-visual">
+      <img src="../img/image1.jpg" alt="Mode femme">
+      <div class="auth-visual-overlay">
+        <h2 class="auth-visual-title">Bon retour !</h2>
+        <p class="auth-visual-sub">Connectez-vous pour accéder à vos favoris et suivre vos commandes.</p>
+      </div>
+    </div>
+
+    <!-- Form side -->
+    <div class="auth-form-wrap">
+      <div class="auth-box">
+        <h1 class="auth-title">Connexion</h1>
+        <p class="auth-sub">Pas encore de compte ? <a href="register.html" class="auth-link">Inscrivez-vous</a></p>
+
+        <div class="auth-alert" id="auth-alert" role="alert"></div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="email">Adresse email</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="votre@email.com" autocomplete="email" required>
+            <div class="field-error" id="email-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <div style="position:relative">
+              <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
+              <button type="button" id="toggle-pwd" aria-label="Afficher/masquer le mot de passe" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--soft);font-size:1rem">👁</button>
+            </div>
+            <div class="field-error" id="password-error"></div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+            <label style="display:flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.88rem;color:var(--mid)">
+              <input type="checkbox" id="remember" style="accent-color:var(--rose)"> Se souvenir de moi
+            </label>
+            <a href="#" class="auth-link" style="font-size:.88rem">Mot de passe oublié ?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" id="login-btn">Se connecter</button>
+        </form>
+
+        <div class="auth-divider" style="margin:1.5rem 0">ou</div>
+
+        <div style="background:var(--rose-light);border-radius:10px;padding:1rem;font-size:.85rem;color:var(--mid)">
+          <strong>Comptes de démonstration :</strong><br>
+          📧 sara@email.com · 🔑 Sara2024!<br>
+          📧 amina@email.com · 🔑 Amina123!
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../javascript/products.js"></script>
+  <script src="../javascript/auth.js"></script>
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/nav.js"></script>
+  <script>
+    // Redirect if already logged in
+    if (isLoggedIn()) window.location.href = '../index.html';
+
+    // Toggle password visibility
+    document.getElementById('toggle-pwd').addEventListener('click', () => {
+      const pwd = document.getElementById('password');
+      pwd.type = pwd.type === 'password' ? 'text' : 'password';
+    });
+
+    // Form submission
+    document.getElementById('login-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      let valid = true;
+
+      // Email validation
+      const emailRes = validateField('email', email);
+      const emailInp = document.getElementById('email');
+      const emailErr = document.getElementById('email-error');
+      if (!emailRes.valid) {
+        emailInp.classList.add('invalid'); emailInp.classList.remove('valid');
+        emailErr.textContent = emailRes.message; emailErr.classList.add('show');
+        valid = false;
+      } else {
+        emailInp.classList.add('valid'); emailInp.classList.remove('invalid');
+        emailErr.classList.remove('show');
+      }
+
+      // Password check (non-empty)
+      const pwdInp = document.getElementById('password');
+      const pwdErr = document.getElementById('password-error');
+      if (!password) {
+        pwdInp.classList.add('invalid'); pwdInp.classList.remove('valid');
+        pwdErr.textContent = 'Veuillez entrer votre mot de passe.'; pwdErr.classList.add('show');
+        valid = false;
+      } else {
+        pwdInp.classList.add('valid'); pwdInp.classList.remove('invalid');
+        pwdErr.classList.remove('show');
+      }
+
+      if (!valid) return;
+
+      // Attempt login
+      const btn = document.getElementById('login-btn');
+      btn.textContent = 'Connexion...'; btn.disabled = true;
+
+      setTimeout(() => {
+        const result = loginUser(email, password);
+        const alert = document.getElementById('auth-alert');
+        if (result.success) {
+          alert.className = 'auth-alert success';
+          alert.textContent = `✓ Bienvenue, ${result.user.name} ! Redirection...`;
+          setTimeout(() => window.location.href = '../index.html', 1200);
+        } else {
+          alert.className = 'auth-alert error';
+          alert.textContent = '✕ ' + result.message;
+          btn.textContent = 'Se connecter'; btn.disabled = false;
+        }
+      }, 600);
+    });
+
+    // Real-time field validation
+    document.getElementById('email').addEventListener('blur', function() {
+      const res = validateField('email', this.value);
+      this.classList.toggle('valid', res.valid);
+      this.classList.toggle('invalid', !res.valid);
+      const err = document.getElementById('email-error');
+      err.textContent = res.message || '';
+      err.classList.toggle('show', !res.valid);
+    });
+  </script>
+</body>
+</html>

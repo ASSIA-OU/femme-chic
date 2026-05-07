@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Créez votre compte FemmeChic et profitez de nos offres exclusives.">
+  <title>Inscription – FemmeChic</title>
+  <link rel="stylesheet" href="../style/main.css">
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <main class="auth-page">
+    <div class="auth-visual">
+      <img src="../img/image7.jpg" alt="Mode femme">
+      <div class="auth-visual-overlay">
+        <h2 class="auth-visual-title">Rejoignez-nous !</h2>
+        <p class="auth-visual-sub">Créez votre compte et accédez à des offres exclusives pour nos membres.</p>
+      </div>
+    </div>
+
+    <div class="auth-form-wrap">
+      <div class="auth-box">
+        <h1 class="auth-title">Créer un compte</h1>
+        <p class="auth-sub">Déjà inscrite ? <a href="login.html" class="auth-link">Se connecter</a></p>
+
+        <div class="auth-alert" id="auth-alert" role="alert"></div>
+
+        <form id="register-form" novalidate>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div class="form-group">
+              <label for="first-name">Prénom</label>
+              <input type="text" id="first-name" class="form-control" placeholder="Sara" autocomplete="given-name" required>
+              <div class="field-error" id="first-name-error"></div>
+            </div>
+            <div class="form-group">
+              <label for="last-name">Nom</label>
+              <input type="text" id="last-name" class="form-control" placeholder="Benali" autocomplete="family-name" required>
+              <div class="field-error" id="last-name-error"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Adresse email</label>
+            <input type="email" id="email" class="form-control" placeholder="votre@email.com" autocomplete="email" required>
+            <div class="field-error" id="email-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Téléphone (optionnel)</label>
+            <input type="tel" id="phone" class="form-control" placeholder="0661234567" autocomplete="tel">
+            <div class="form-hint">Format : 0661234567 ou +213661234567</div>
+            <div class="field-error" id="phone-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <div style="position:relative">
+              <input type="password" id="password" class="form-control" placeholder="••••••••" autocomplete="new-password" required>
+              <button type="button" id="toggle-pwd" aria-label="Afficher/masquer" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--soft)">👁</button>
+            </div>
+            <div class="form-hint">Min. 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre, 1 symbole</div>
+            <div class="field-error" id="password-error"></div>
+            <!-- Password strength -->
+            <div id="pwd-strength" style="margin-top:.5rem;display:none">
+              <div style="height:4px;border-radius:2px;background:var(--border);overflow:hidden">
+                <div id="pwd-bar" style="height:100%;border-radius:2px;transition:width .3s,background .3s;width:0"></div>
+              </div>
+              <div id="pwd-label" style="font-size:.75rem;margin-top:.2rem;color:var(--soft)"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Confirmer le mot de passe</label>
+            <input type="password" id="confirm-password" class="form-control" placeholder="••••••••" autocomplete="new-password" required>
+            <div class="field-error" id="confirm-error"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:1.5rem">
+            <label style="display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;font-size:.88rem;color:var(--mid);line-height:1.5">
+              <input type="checkbox" id="terms" style="accent-color:var(--rose);margin-top:3px" required>
+              J'accepte les <a href="#" class="auth-link" style="margin:0 .2rem">conditions d'utilisation</a> et la <a href="#" class="auth-link" style="margin:0 .2rem">politique de confidentialité</a>
+            </label>
+            <div class="field-error" id="terms-error"></div>
+          </div>
+
+          <div class="form-group" style="margin-bottom:1.5rem">
+            <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;font-size:.88rem;color:var(--mid)">
+              <input type="checkbox" id="newsletter" style="accent-color:var(--rose)" checked>
+              Recevoir nos offres exclusives et nouveautés par email
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" id="register-btn">Créer mon compte</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="../javascript/products.js"></script>
+  <script src="../javascript/auth.js"></script>
+  <script src="../javascript/main.js"></script>
+  <script src="../javascript/nav.js"></script>
+  <script>
+    if (isLoggedIn()) window.location.href = '../index.html';
+
+    document.getElementById('toggle-pwd').addEventListener('click', () => {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    });
+
+    // Password strength indicator
+    document.getElementById('password').addEventListener('input', function() {
+      const val = this.value;
+      const strength = document.getElementById('pwd-strength');
+      const bar = document.getElementById('pwd-bar');
+      const label = document.getElementById('pwd-label');
+      if (!val) { strength.style.display = 'none'; return; }
+      strength.style.display = 'block';
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[a-z]/.test(val)) score++;
+      if (/\d/.test(val)) score++;
+      if (/[!@#$%^&*]/.test(val)) score++;
+      const levels = [
+        { w: '20%', bg: '#ef5350', txt: 'Très faible' },
+        { w: '40%', bg: '#ff7043', txt: 'Faible' },
+        { w: '60%', bg: '#ffa726', txt: 'Moyen' },
+        { w: '80%', bg: '#66bb6a', txt: 'Fort' },
+        { w: '100%', bg: '#43a047', txt: 'Très fort ✓' }
+      ];
+      const lvl = levels[score - 1] || levels[0];
+      bar.style.width = lvl.w; bar.style.background = lvl.bg;
+      label.textContent = lvl.txt; label.style.color = lvl.bg;
+    });
+
+    // Real-time validation
+    function setupValidation(id, type) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('blur', function() {
+        const res = validateField(type, this.value);
+        this.classList.toggle('valid', res.valid);
+        this.classList.toggle('invalid', !res.valid && this.value !== '');
+        const err = document.getElementById(id + '-error') || document.getElementById(id.replace('-', '') + '-error');
+        if (err) { err.textContent = res.message || ''; err.classList.toggle('show', !res.valid && this.value !== ''); }
+      });
+    }
+    setupValidation('email', 'email');
+    setupValidation('password', 'password');
+    setupValidation('first-name', 'name');
+    setupValidation('last-name', 'name');
+
+    // Phone optional validation
+    document.getElementById('phone').addEventListener('blur', function() {
+      if (!this.value) return;
+      const res = validateField('phone', this.value);
+      this.classList.toggle('valid', res.valid);
+      this.classList.toggle('invalid', !res.valid);
+      const err = document.getElementById('phone-error');
+      err.textContent = res.message || ''; err.classList.toggle('show', !res.valid);
+    });
+
+    document.getElementById('confirm-password').addEventListener('blur', function() {
+      const pwd = document.getElementById('password').value;
+      const match = this.value === pwd;
+      this.classList.toggle('valid', match && this.value);
+      this.classList.toggle('invalid', !match && this.value);
+      const err = document.getElementById('confirm-error');
+      err.textContent = match ? '' : 'Les mots de passe ne correspondent pas.';
+      err.classList.toggle('show', !match && this.value !== '');
+    });
+
+    // Submit
+    document.getElementById('register-form').addEventListener('submit', e => {
+      e.preventDefault();
+      let valid = true;
+      const alertEl = document.getElementById('auth-alert');
+
+      const checks = [
+        { id: 'first-name', type: 'name', errId: 'first-name-error' },
+        { id: 'last-name', type: 'name', errId: 'last-name-error' },
+        { id: 'email', type: 'email', errId: 'email-error' },
+        { id: 'password', type: 'password', errId: 'password-error' }
+      ];
+
+      checks.forEach(({ id, type, errId }) => {
+        const el = document.getElementById(id);
+        const res = validateField(type, el.value);
+        el.classList.toggle('valid', res.valid);
+        el.classList.toggle('invalid', !res.valid);
+        const err = document.getElementById(errId);
+        err.textContent = res.message || ''; err.classList.toggle('show', !res.valid);
+        if (!res.valid) valid = false;
+      });
+
+      // Phone
+      const phoneEl = document.getElementById('phone');
+      if (phoneEl.value.trim()) {
+        const phoneRes = validateField('phone', phoneEl.value);
+        if (!phoneRes.valid) {
+          phoneEl.classList.add('invalid');
+          const err = document.getElementById('phone-error');
+          err.textContent = phoneRes.message; err.classList.add('show');
+          valid = false;
+        }
+      }
+
+      // Password confirm
+      const pwd = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm-password').value;
+      if (pwd !== confirm) {
+        document.getElementById('confirm-password').classList.add('invalid');
+        const err = document.getElementById('confirm-error');
+        err.textContent = 'Les mots de passe ne correspondent pas.'; err.classList.add('show');
+        valid = false;
+      }
+
+      // Terms
+      const terms = document.getElementById('terms');
+      const termsErr = document.getElementById('terms-error');
+      if (!terms.checked) {
+        termsErr.textContent = 'Vous devez accepter les conditions.'; termsErr.classList.add('show');
+        valid = false;
+      } else { termsErr.classList.remove('show'); }
+
+      if (!valid) return;
+
+      const btn = document.getElementById('register-btn');
+      btn.textContent = 'Création...'; btn.disabled = true;
+
+      const firstName = document.getElementById('first-name').value.trim();
+      const lastName = document.getElementById('last-name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      setTimeout(() => {
+        const result = registerUser(`${firstName} ${lastName}`, email, password);
+        if (result.success) {
+          loginUser(email, password);
+          alertEl.className = 'auth-alert success';
+          alertEl.textContent = '✓ Compte créé avec succès ! Redirection...';
+          setTimeout(() => window.location.href = '../index.html', 1500);
+        } else {
+          alertEl.className = 'auth-alert error';
+          alertEl.textContent = '✕ ' + result.message;
+          btn.textContent = 'Créer mon compte'; btn.disabled = false;
+        }
+      }, 600);
+    });
+  </script>
+</body>
+</html>
