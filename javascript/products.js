@@ -1,6 +1,6 @@
 const products = [
   // Robes
-  { id: 1, name: "Robe Florale Élégante", category: "robes", price: 4500, oldPrice: 6000, image: "../img/image2.jpg", rating: 4.8, reviews: 124, badge: "Bestseller", description: "Robe légère à imprimé floral, parfaite pour l'été.", sizes: ["XS","S","M","L","XL"], colors: ["Rose","Bleu","Blanc"] },
+  { id: 1, name: "Robe Florale Élégante", category: "robes", price: 4500, oldPrice: 6000, image: "  ../img/image2.jpg", rating: 4.8, reviews: 124, badge: "Bestseller", description: "Robe légère à imprimé floral, parfaite pour l'été.", sizes: ["XS","S","M","L","XL"], colors: ["Rose","Bleu","Blanc"] },
   { id: 2, name: "Robe de Soirée Noire", category: "robes", price: 7800, oldPrice: null, image: "../img/image8.jpg", rating: 4.9, reviews: 89, badge: "Nouveau", description: "Robe de soirée longue, coupe sirène, tissu satiné.", sizes: ["S","M","L"], colors: ["Noir","Bordeaux"] },
   { id: 3, name: "Robe Bohème Midi", category: "robes", price: 3200, oldPrice: 4000, image: "../img/image9.jpg", rating: 4.5, reviews: 67, badge: "Solde", description: "Robe midi style bohème, broderie artisanale.", sizes: ["XS","S","M","L","XL","XXL"], colors: ["Terre","Crème","Orange"] },
   { id: 4, name: "Robe Casual Rayée", category: "robes", price: 2800, oldPrice: null, image: "../img/image10.jpg", rating: 4.3, reviews: 45, badge: null, description: "Robe courte rayée, confortable au quotidien.", sizes: ["XS","S","M","L"], colors: ["Bleu marine","Rouge","Noir"] },
