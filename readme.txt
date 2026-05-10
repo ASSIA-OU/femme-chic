@@ -66,7 +66,6 @@ TECHNOLOGIES UTILISÉES
 - CSS3 externe avec variables CSS, Flexbox, Grid, animations
 - JavaScript vanilla (DOM, localStorage, RegEx, événements)
 - Google Fonts : Playfair Display + Jost
-- Images : Unsplash (via URL externe)
 
 CONTRAINTES RESPECTÉES
 ------------------------
